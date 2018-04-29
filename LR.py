@@ -47,7 +47,7 @@ def compute(X_train, y_train, w, b, alpha, iteration_num):
         yhat = sigmoid(np.dot(X_train, w) + b) #计算yhat
         J = cost(y_train, yhat, num_classes) #计算cost
         dw = (1/60000) * np.dot(X_train.T, yhat - y_train) #计算dw,参考函数np.dot，注意按样本数进行平均
-        db = (1/60000) * (yhat - y_train) #计算db，注意按样本数进行平均
+        db = np.mean(yhat - y_train, axis = 0) #计算db，注意按样本数进行平均
         w = w - alpha * dw #用dw去迭代w,别忘了迭代长度alpha
         b = b - alpha * db #同上，更新b
         #每50次输出一次cost和accurancy，检查梯度下降是否正确
@@ -62,10 +62,10 @@ def compute(X_train, y_train, w, b, alpha, iteration_num):
 np.random.seed(1) #定义随机数，保证给w和b进行初始化时，大家的结果是相同的，以使得程序可以对比运行结果，大家不用管它
 X_train, y_train, X_test, y_test, num_classes, num_pixels = data_load()
 w = np.random.rand(784, 10) - 0.5 #应用np.random.rand初始经w，考虑如何让均值为0
-b = np.random.rand(60000, 10) - 0.5 #同上，初始经b，均值为0
+b = np.random.rand(1, 10) - 0.5 #同上，初始经b，均值为0
 alpha = 0.03
 iteration_num = 1000
 [w, b, JList] = compute(X_train, y_train, w, b, alpha, iteration_num) #应用你完成的compute函数来计算上述参数吧
 #用测试集试试，看看新的数据，预测效果怎么样
 yhat = sigmoid(np.dot(X_test, w) + b)
-print("accurancy of test set is:" + str(sum(np.argmax(yhat, axis = 1) == np.argmax(y_train, axis = 1))/60000))
+print("accurancy of test set is:" + str(sum(np.argmax(yhat, axis = 1) == np.argmax(y_test, axis = 1))/10000))
